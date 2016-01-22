@@ -1,7 +1,7 @@
 import geometry.Plane;
 import geometry.Point;
-import geometry.Translation;
+import geometry.Transformation;
 
 public interface ICP {
-    Translation iterate(Point[] source, Plane[] target);
+    Transformation iterate(Point[] source, Plane[] target);
 }

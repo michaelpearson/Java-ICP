@@ -3,9 +3,7 @@ import geometry.Point;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Scene extends JFrame {
@@ -38,10 +36,14 @@ public class Scene extends JFrame {
                 Scene.this.repaint();
             }
         });
+
+        JButton button = new JButton("Run ICP");
+        add(button, BorderLayout.SOUTH);
+        button.addActionListener(e -> new ICPWorker(new SimpleICP()));
         setVisible(true);
     }
 
-    private Point findClosestPlane(Point p) {
+    public static Point findClosestPlane(Plane[] planes, Point p) {
         ArrayList<Point> cPoints = new ArrayList<>();
         for(Plane plane : planes) {
             Point AP = new Point(p.getX() - plane.getX1(), p.getY() - plane.getY1());
@@ -64,7 +66,7 @@ public class Scene extends JFrame {
         return minPoint;
     }
 
-    private int distanceBetweenPoints(Point p1, Point p2) {
+    private static int distanceBetweenPoints(Point p1, Point p2) {
         return (int)Math.sqrt(Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
     }
 
@@ -81,7 +83,7 @@ public class Scene extends JFrame {
     }
 
     private void drawToClosestPlane(Graphics2D g) {
-        Point end = findClosestPlane(lastMousePosition);
+        Point end = findClosestPlane(planes, lastMousePosition);
         g.drawLine(lastMousePosition.getX(), lastMousePosition.getY(), end.getX(), end.getY());
     }
 
@@ -99,6 +101,22 @@ public class Scene extends JFrame {
                 g.setColor(Color.white);
                 Scene.this.drawToClosestPlane((Graphics2D)g);
             }
+        }
+    }
+
+    class ICPWorker extends Thread {
+        private ICP icp;
+        public ICPWorker(ICP icp) {
+            this.icp = icp;
+            start();
+        }
+
+        @Override
+        public void run() {
+            Transformation t;
+            t = icp.iterate(points, planes);
+            System.out.println(t);
+            super.run();
         }
     }
 }

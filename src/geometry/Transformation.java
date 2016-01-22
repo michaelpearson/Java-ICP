@@ -1,7 +1,8 @@
 package geometry;
 
-public class Translation {
-    int dx,dy,dt;
+public class Transformation {
+    int dx,dy;
+    double dt;
 
     public int getDx() {
         return dx;
@@ -19,7 +20,7 @@ public class Translation {
         this.dy = dy;
     }
 
-    public int getDt() {
+    public double getDt() {
         return dt;
     }
 
@@ -27,10 +28,20 @@ public class Translation {
         this.dt = dt;
     }
 
-    public Translation(int dx, int dy, int dt) {
+    public Transformation(int dx, int dy, double dt) {
 
         this.dx = dx;
         this.dy = dy;
         this.dt = dt;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Transformation{" +
+                "dx=" + dx +
+                ", dy=" + dy +
+                ", dt=" + dt +
+                '}';
     }
 }
